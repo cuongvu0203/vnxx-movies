@@ -5,7 +5,7 @@
             <div class="container mx-auto flex justify-between items-center">
                 <div class="text-2xl font-bold">
                     <nuxt-link to="/" class="hover:text-blue-300"
-                        >vnxx VietNam</nuxt-link
+                        >vnxx.com</nuxt-link
                     >
                 </div>
                 <ul class="flex space-x-6">
@@ -14,12 +14,12 @@
                             >Trang chủ</nuxt-link
                         >
                     </li>
-                    <!--<li>
-                        <nuxt-link to="/tvshows" class="hover:text-blue-300"
-                            >TV Shows</nuxt-link
+                    <li>
+                        <nuxt-link to="/gene" class="hover:text-blue-300"
+                            >Thể loại</nuxt-link
                         >
                     </li>
-                    <li>
+                    <!--<li>
                         <nuxt-link to="/phimle" class="hover:text-blue-300"
                             >Phim Lẻ</nuxt-link
                         >

@@ -23,3 +23,10 @@ export const getCategoryMovies = async (category: string) => {
     const apiBase = config.public.apiBase
     return await $fetch(`${apiBase}/chuyen-muc/${category}/`)
 }
+
+
+export const getListCategorys = async () => {
+    const config = useRuntimeConfig()
+    const apiBase = config.public.apiBase
+    return await $fetch(`${apiBase}/categories`)
+}

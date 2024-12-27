@@ -21,8 +21,9 @@
                         class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
                         aria-label="Pagination"
                     >
+                        <!-- Nút Trước -->
                         <button
-                            @click="fetchMovies(currentPage - 1)"
+                            @click="fetchMovies(slug_name, currentPage - 1)"
                             :disabled="currentPage <= 1"
                             class="relative inline-flex items-center px-2 py-2 rounded-l-md border bg-white dark:bg-slate-700/10 dark:bg-gray-800 border-gray-300 text-gray-700 dark:border-gray-600 hover:bg-gray-300 dark:hover:bg-gray-900 text-sm font-medium"
                         >
@@ -43,10 +44,12 @@
                                 />
                             </svg>
                         </button>
+
+                        <!-- Hiển thị các số trang -->
                         <span
-                            v-for="page in visiblePages" 
+                            v-for="page in visiblePages"
                             :key="page"
-                            @click="fetchMovies(page)"
+                            @click="fetchMovies(slug_name, page)"
                             :class="{
                                 'z-10 bg-indigo-50 dark:bg-slate-700/10 border-indigo-500 text-indigo-600':
                                     page === currentPage,
@@ -57,8 +60,10 @@
                         >
                             {{ page }}
                         </span>
+
+                        <!-- Nút Sau -->
                         <button
-                            @click="fetchMovies(currentPage + 1)"
+                            @click="fetchMovies(slug_name, currentPage + 1)"
                             :disabled="currentPage >= totalPages"
                             class="relative inline-flex items-center px-2 py-2 rounded-r-md border bg-white dark:bg-slate-700/10 border-gray-300 text-gray-700 dark:border-gray-600 hover:bg-gray-300 dark:hover:bg-gray-900 text-sm font-medium"
                         >
@@ -86,16 +91,19 @@
     </div>
 </template>
 
+
 <script setup>
-import { ref } from "vue";
-import { getNewMovies } from "~/utils/api";
+import { ref, computed, onMounted } from "vue";
+import { getNewMoviesByCategorys } from "~/utils/api";
 import MovieCard from "~/components/MovieCard";
+import { useRoute } from "vue-router";
 
 // Biến trạng thái
 const lstMovie = ref([]);
 const currentPage = ref(1); // Trang hiện tại
 const totalPages = ref(0); // Tổng số trang
 const totalMovies = ref(0); // Tổng số kết quả
+let slug_name = ""; // Sử dụng let thay vì const
 
 // Tính toán danh sách các trang hiển thị
 const visiblePages = computed(() => {
@@ -103,18 +111,20 @@ const visiblePages = computed(() => {
     const start = Math.max(1, currentPage.value - range);
     const end = Math.min(totalPages.value, currentPage.value + range);
     const pages = [];
+
     for (let i = start; i <= end; i++) {
         pages.push(i);
     }
+
     return pages;
 });
 
 // Hàm lấy dữ liệu phim
-const fetchMovies = async (page = 1) => {
+const fetchMovies = async (slug, page = 1) => {
     if (page < 1 || (totalPages.value && page > totalPages.value)) return;
 
     try {
-        const { movies, page: pageInfo } = await getNewMovies(page);
+        const { movies, page: pageInfo } = await getNewMoviesByCategorys(slug, page);
 
         // Cập nhật danh sách phim và thông tin phân trang
         lstMovie.value = movies;
@@ -126,6 +136,12 @@ const fetchMovies = async (page = 1) => {
     }
 };
 
-// Lấy dữ liệu lần đầu
-fetchMovies();
+onMounted(() => {
+    const route = useRoute();
+    const slug = route.params.slug;
+    if (slug) {
+        slug_name = slug; // Gán giá trị slug_name
+        fetchMovies(slug);
+    }
+});
 </script>

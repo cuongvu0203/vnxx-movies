@@ -1,6 +1,6 @@
 <template>
     <nuxt-link
-        :to="`/chuyen-muc/${gene.slug}`"
+        :to="`/chuyen-muc-${gene.slug}`"
         class="border p-2 rounded shadow hover:shadow-lg hover:cursor-pointer"
     >
         <div class="mt-2">
